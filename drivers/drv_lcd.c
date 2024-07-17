@@ -15,26 +15,10 @@
 #include <string.h>
 
 #define DRV_DEBUG
-#define LOG_TAG             "drv.lcd"
+#define LOG_TAG "drv.lcd"
 #include <drv_log.h>
 
-#define LCD_DEVICE(dev)     (struct drv_lcd_device*)(dev)
-
 static LTDC_HandleTypeDef LtdcHandle = {0};
-
-struct drv_lcd_device
-{
-    struct rt_device parent;
-
-    struct rt_device_graphic_info lcd_info;
-
-    struct rt_semaphore lcd_lock;
-
-    /* 0:front_buf is being used 1: back_buf is being used*/
-    rt_uint8_t cur_buf;
-    rt_uint8_t *front_buf;
-    rt_uint8_t *back_buf;
-};
 
 struct drv_lcd_device _lcd;
 
@@ -106,7 +90,6 @@ static void MX_LTDC_MspInit(void)
     HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 }
 
-
 static rt_err_t drv_lcd_init(struct rt_device *device)
 {
     struct drv_lcd_device *lcd = LCD_DEVICE(device);
@@ -152,11 +135,11 @@ static rt_err_t drv_lcd_control(struct rt_device *device, int cmd, void *args)
         struct rt_device_graphic_info *info = (struct rt_device_graphic_info *)args;
 
         RT_ASSERT(info != RT_NULL);
-        info->pixel_format  = lcd->lcd_info.pixel_format;
+        info->pixel_format = lcd->lcd_info.pixel_format;
         info->bits_per_pixel = 16;
-        info->width         = lcd->lcd_info.width;
-        info->height        = lcd->lcd_info.height;
-        info->framebuffer   = lcd->lcd_info.framebuffer;
+        info->width = lcd->lcd_info.width;
+        info->height = lcd->lcd_info.height;
+        info->framebuffer = lcd->lcd_info.framebuffer;
     }
     break;
 
@@ -213,7 +196,7 @@ rt_err_t stm32_lcd_init(struct drv_lcd_device *lcd)
     /* Accumulated vertical back porch = Vsync + VBP - 1 */
     LtdcHandle.Init.AccumulatedVBP = LCD_VSYNC_HEIGHT + LCD_VBP - 1;
     /* Accumulated active width = Hsync + HBP + Active Width - 1 */
-    LtdcHandle.Init.AccumulatedActiveW = LCD_HSYNC_WIDTH + LCD_HBP + lcd->lcd_info.width - 1 ;
+    LtdcHandle.Init.AccumulatedActiveW = LCD_HSYNC_WIDTH + LCD_HBP + lcd->lcd_info.width - 1;
     /* Accumulated active height = Vsync + VBP + Active Heigh - 1 */
     LtdcHandle.Init.AccumulatedActiveH = LCD_VSYNC_HEIGHT + LCD_VBP + lcd->lcd_info.height - 1;
     /* Total height = Vsync + VBP + Active Heigh + VFP - 1 */
@@ -322,28 +305,26 @@ void turn_on_lcd_backlight(void)
 void turn_on_lcd_backlight(void)
 {
     rt_pin_mode(LCD_BL_GPIO_NUM, PIN_MODE_OUTPUT);
-//    rt_pin_mode(LCD_DISP_GPIO_NUM, PIN_MODE_OUTPUT);
+    //    rt_pin_mode(LCD_DISP_GPIO_NUM, PIN_MODE_OUTPUT);
 
-//    rt_pin_write(LCD_DISP_GPIO_NUM, PIN_HIGH);
+    //    rt_pin_write(LCD_DISP_GPIO_NUM, PIN_HIGH);
     rt_pin_write(LCD_BL_GPIO_NUM, PIN_HIGH);
 }
 #else
 void turn_on_lcd_backlight(void)
 {
-
 }
 #endif
 
 #ifdef RT_USING_DEVICE_OPS
 const static struct rt_device_ops lcd_ops =
-{
-    drv_lcd_init,
-    RT_NULL,
-    RT_NULL,
-    RT_NULL,
-    RT_NULL,
-    drv_lcd_control
-};
+    {
+        drv_lcd_init,
+        RT_NULL,
+        RT_NULL,
+        RT_NULL,
+        RT_NULL,
+        drv_lcd_control};
 #endif
 
 int drv_lcd_hw_init(void)
@@ -385,11 +366,11 @@ int drv_lcd_hw_init(void)
     memset(_lcd.back_buf, 0xFF, LCD_BUF_SIZE);
     memset(_lcd.front_buf, 0xFF, LCD_BUF_SIZE);
 
-    device->type    = RT_Device_Class_Graphic;
+    device->type = RT_Device_Class_Graphic;
 #ifdef RT_USING_DEVICE_OPS
-    device->ops     = &lcd_ops;
+    device->ops = &lcd_ops;
 #else
-    device->init    = drv_lcd_init;
+    device->init = drv_lcd_init;
     device->control = drv_lcd_control;
 #endif
 
@@ -466,7 +447,7 @@ int lcd_test()
         rt_thread_mdelay(1000);
     }
 }
-MSH_CMD_EXPORT(lcd_test, lcd_test);
+// MSH_CMD_EXPORT(lcd_test, lcd_test);
 #endif /* FINSH_USING_MSH */
 #endif /* DRV_DEBUG */
 #endif /* BSP_USING_LCD */

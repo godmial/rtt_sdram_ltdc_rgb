@@ -9,6 +9,7 @@
  */
 
 #include <rtthread.h>
+#include "lcd.h"
 
 #define DBG_TAG "main"
 #define DBG_LVL DBG_LOG
@@ -17,6 +18,17 @@
 int main(void)
 {
 
+    // drv_lcd_hw_init();
+    // rt_thread_mdelay(1000);
+    rt_err_t res;
+    res = lcd_init();
+
+    rt_thread_mdelay(100);
+    lcd_show_string(30, 50, 200, 16, 16, "STM32", RED);
+    lcd_show_string(30, 50, 200, 16, 16, "STM32", RED);
+    lcd_show_string(30, 70, 200, 16, 16, "TOUCH TEST", RED);
+    lcd_show_string(30, 90, 200, 16, 16, "ATOM@ALIENTEK", RED);
+    lcd_flush();
 
     return RT_EOK;
 }
