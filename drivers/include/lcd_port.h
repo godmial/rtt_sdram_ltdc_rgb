@@ -10,6 +10,8 @@
 
 #ifndef __LCD_PORT_H__
 #define __LCD_PORT_H__
+#include "rtthread.h"
+#include "board.h"
 
 /* fire 5 inch screen, 800 * 480 */
 #define LCD_WIDTH 800

@@ -87,7 +87,11 @@
 #define RT_USING_SERIAL
 #define RT_USING_SERIAL_V1
 #define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_I2C
+#define RT_USING_I2C_BITOPS
 #define RT_USING_PIN
+#define RT_USING_TOUCH
+#define RT_TOUCH_PIN_IRQ
 
 /* Using USB */
 
@@ -224,6 +228,19 @@
 
 /* touch drivers */
 
+#define PKG_USING_GT1151
+#define PKG_USING_GT1151_V100
+
+/* gt1151 options */
+
+#define GT1151_BUS_NAME "i2c1"
+#define GT1151_RST_PIN 51
+#define GT1151_IRQ_PIN 108
+#define GT1151_TOUCH_WIDTH 800
+#define GT1151_TOUCH_HEIGHT 480
+#define GT1151_SUPPORT_POINTS 10
+/* end of gt1151 options */
+#define GT1151_USING_EXAMPLE
 /* end of touch drivers */
 /* end of peripheral libraries and drivers */
 
